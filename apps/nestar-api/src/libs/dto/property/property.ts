@@ -55,7 +55,7 @@ export class Property {
 	propertyDesc?: string;
 
 	@Field(() => Boolean)
-	propertyBarter: boolean;
+	propertyBook: boolean;
 
 	@Field(() => Boolean)
 	propertyRent: boolean;

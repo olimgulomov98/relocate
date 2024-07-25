@@ -80,7 +80,7 @@ const PropertySchema = new Schema(
 			type: String,
 		},
 
-		propertyBarter: {
+		propertyBook: {
 			type: Boolean,
 			default: false,
 		},

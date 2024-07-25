@@ -11,6 +11,8 @@ import { Comment, Comments } from '../../libs/dto/comment/comment';
 import { CommentUpdate } from '../../libs/dto/comment/comment.update';
 import { T } from '../../libs/types/common';
 import { lookupMember } from '../../libs/config';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationGroup, NotificationStatus, NotificationType } from '../../libs/enums/notification.enum';
 
 @Injectable()
 export class CommentService {
@@ -19,6 +21,7 @@ export class CommentService {
 		private readonly memberService: MemberService,
 		private readonly propertyService: PropertyService,
 		private readonly boardArticleService: BoardArticleService,
+		private notificationService: NotificationService,
 	) {}
 
 	public async createComment(memberId: ObjectId, input: CommentInput): Promise<Comment> {
@@ -52,6 +55,42 @@ export class CommentService {
 					_id: input.commentRefId,
 					targetKey: 'memberComments',
 					modifier: 1,
+				});
+				break;
+		}
+
+		switch (input.commentGroup) {
+			case CommentGroup.PROPERTY:
+				await this.notificationService.createNotification({
+					notificationType: NotificationType.COMMENT,
+					notificationStatus: NotificationStatus.WAIT,
+					notificationGroup: NotificationGroup.PROPERTY,
+					notificationTitle: `New Comment`,
+					notificationDesc: `shu bola sizni shun prpakfpad${input.commentContent} shunaqa dedi`,
+					authorId: input.memberId,
+					receiverId: input.commentRefId,
+				});
+				break;
+			case CommentGroup.ARTICLE:
+				await this.notificationService.createNotification({
+					notificationType: NotificationType.COMMENT,
+					notificationStatus: NotificationStatus.WAIT,
+					notificationGroup: NotificationGroup.ARTICLE,
+					notificationTitle: `New Comment`,
+					notificationDesc: `shu bola sizni shun prpakfpad${input.commentContent} shunaqa dedi`,
+					authorId: input.memberId,
+					receiverId: input.commentRefId,
+				});
+				break;
+			case CommentGroup.MEMBER:
+				await this.notificationService.createNotification({
+					notificationType: NotificationType.COMMENT,
+					notificationStatus: NotificationStatus.WAIT,
+					notificationGroup: NotificationGroup.MEMBER,
+					notificationTitle: `comment to property`,
+					notificationDesc: `${input.commentRefId} comment`,
+					authorId: input.memberId,
+					receiverId: input.commentRefId,
 				});
 				break;
 		}
