@@ -1,20 +1,19 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { Member, TotalCounter } from '../member/member';
 import { NotificationGroup, NotificationStatus, NotificationType } from '../../enums/notification.enum';
-import { IsIn, IsNotEmpty, isNotEmpty, IsOptional, Min } from 'class-validator';
+import { IsIn, IsNotEmpty, IsOptional, Min } from 'class-validator';
 import { Direction } from '../../enums/common.enum';
 import { availableNotificationSorts } from '../../config';
 
 @InputType()
-export class notificationInput {
+export class NotificationInput {
 	@IsNotEmpty()
 	@Field(() => NotificationType)
 	notificationType: NotificationType;
 
-	@IsNotEmpty()
+	@IsOptional()
 	@Field(() => NotificationStatus, { defaultValue: NotificationStatus.WAIT })
-	notificationStatus: NotificationStatus;
+	notificationStatus?: NotificationStatus;
 
 	@IsNotEmpty()
 	@Field(() => NotificationGroup)

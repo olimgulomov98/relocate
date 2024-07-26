@@ -16,7 +16,6 @@ import { NotificationModule } from '../notification/notification.module';
 		AuthModule,
 		ViewModule,
 		LikeModule,
-		NotificationModule,
 	],
 	providers: [MemberResolver, MemberService],
 	exports: [MemberService],

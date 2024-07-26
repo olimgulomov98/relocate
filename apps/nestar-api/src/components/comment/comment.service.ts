@@ -59,6 +59,9 @@ export class CommentService {
 				break;
 		}
 
+		const member = await this.memberService.getMember(null, memberId);
+		// const property = await this.propertyService.getProperty(null, memberId);
+
 		switch (input.commentGroup) {
 			case CommentGroup.PROPERTY:
 				await this.notificationService.createNotification({
@@ -66,7 +69,7 @@ export class CommentService {
 					notificationStatus: NotificationStatus.WAIT,
 					notificationGroup: NotificationGroup.PROPERTY,
 					notificationTitle: `New Comment`,
-					notificationDesc: `shu bola sizni shun prpakfpad${input.commentContent} shunaqa dedi`,
+					notificationDesc: `${member.memberNick} sizni shu "${input.commentContent}" shunaqa dedi`,
 					authorId: input.memberId,
 					receiverId: input.commentRefId,
 				});
@@ -77,7 +80,7 @@ export class CommentService {
 					notificationStatus: NotificationStatus.WAIT,
 					notificationGroup: NotificationGroup.ARTICLE,
 					notificationTitle: `New Comment`,
-					notificationDesc: `shu bola sizni shun prpakfpad${input.commentContent} shunaqa dedi`,
+					notificationDesc: `shu bola sizni shu projectingizga "${input.commentContent}" shunaqa dedi`,
 					authorId: input.memberId,
 					receiverId: input.commentRefId,
 				});
