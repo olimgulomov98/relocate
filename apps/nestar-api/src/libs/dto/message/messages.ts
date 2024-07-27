@@ -2,15 +2,15 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 
 @ObjectType()
-export class Message {
+export class Messages {
 	@Field(() => String)
 	_id: ObjectId;
 
 	@Field(() => String)
 	name: string;
 
-	@Field(() => Int)
-	phone: number;
+	@Field(() => String)
+	phone: string;
 
 	@Field(() => String)
 	email: string;
@@ -26,9 +26,4 @@ export class Message {
 
 	@Field(() => Date)
 	createdAt: Date;
-
-	/** from aggregation **/
-
-	// @Field(() => Member, { nullable: true })
-	// memberData?: Member;
 }

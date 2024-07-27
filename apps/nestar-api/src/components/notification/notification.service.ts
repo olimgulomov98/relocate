@@ -1,9 +1,10 @@
 import { Notification } from '../../libs/dto/notification/notification';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { NotificationInput } from '../../libs/dto/notification/notification.input';
 import { NotificationStatus } from '../../libs/enums/notification.enum';
+import { Message } from '../../libs/enums/common.enum';
 
 @Injectable()
 export class NotificationService {
@@ -17,8 +18,8 @@ export class NotificationService {
 			});
 			return createdNotification;
 		} catch (err) {
-			console.log('Error, NotificationService.createNotification', err.message);
-			throw new BadRequestException('Failed to create notification');
+			console.log('Error, Service.model:', err.message);
+			throw new BadRequestException(Message.CREATE_FAILED);
 		}
 	}
 

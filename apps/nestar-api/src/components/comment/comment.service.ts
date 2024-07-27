@@ -21,7 +21,7 @@ export class CommentService {
 		private readonly memberService: MemberService,
 		private readonly propertyService: PropertyService,
 		private readonly boardArticleService: BoardArticleService,
-		private notificationService: NotificationService,
+		private readonly notificationService: NotificationService,
 	) {}
 
 	public async createComment(memberId: ObjectId, input: CommentInput): Promise<Comment> {
@@ -60,27 +60,26 @@ export class CommentService {
 		}
 
 		const member = await this.memberService.getMember(null, memberId);
-		// const property = await this.propertyService.getProperty(null, memberId);
+		const property = await this.propertyService.getProperty(null, input.commentRefId);
+		// const article = await this.boardArticleService.getBoardArticle(null, input.commentRefId);
 
 		switch (input.commentGroup) {
 			case CommentGroup.PROPERTY:
 				await this.notificationService.createNotification({
 					notificationType: NotificationType.COMMENT,
-					notificationStatus: NotificationStatus.WAIT,
 					notificationGroup: NotificationGroup.PROPERTY,
 					notificationTitle: `New Comment`,
-					notificationDesc: `${member.memberNick} sizni shu "${input.commentContent}" shunaqa dedi`,
+					notificationDesc: `${member.memberNick} commented "${input.commentContent}" on your property ${property.propertyTitle}!`,
 					authorId: input.memberId,
-					receiverId: input.commentRefId,
+					receiverId: property.memberData?._id,
 				});
 				break;
 			case CommentGroup.ARTICLE:
 				await this.notificationService.createNotification({
 					notificationType: NotificationType.COMMENT,
-					notificationStatus: NotificationStatus.WAIT,
 					notificationGroup: NotificationGroup.ARTICLE,
 					notificationTitle: `New Comment`,
-					notificationDesc: `shu bola sizni shu projectingizga "${input.commentContent}" shunaqa dedi`,
+					notificationDesc: `${member.memberNick} commented "${input.commentContent}" on your article!`,
 					authorId: input.memberId,
 					receiverId: input.commentRefId,
 				});
@@ -88,10 +87,9 @@ export class CommentService {
 			case CommentGroup.MEMBER:
 				await this.notificationService.createNotification({
 					notificationType: NotificationType.COMMENT,
-					notificationStatus: NotificationStatus.WAIT,
 					notificationGroup: NotificationGroup.MEMBER,
-					notificationTitle: `comment to property`,
-					notificationDesc: `${input.commentRefId} comment`,
+					notificationTitle: `New Comment`,
+					notificationDesc: `${member.memberNick} commented "${input.commentContent}" on your profile!}`,
 					authorId: input.memberId,
 					receiverId: input.commentRefId,
 				});

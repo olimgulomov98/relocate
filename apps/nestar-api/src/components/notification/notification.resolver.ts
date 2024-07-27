@@ -3,6 +3,9 @@ import { NotificationService } from './notification.service';
 import NotificationSchema from '../../schemas/Notification.model';
 import { Notification } from '../../libs/dto/notification/notification';
 import { NotificationInput } from '../../libs/dto/notification/notification.input';
+import { AuthMember } from '../auth/decorators/authMember.decorator';
+import { ObjectId } from 'mongoose';
+import { shapeIntoMongoObjectId } from '../../libs/config';
 @Resolver(() => NotificationSchema)
 export class NotificationResolver {
 	constructor(private readonly notificationService: NotificationService) {}

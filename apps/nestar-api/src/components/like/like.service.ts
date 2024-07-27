@@ -36,7 +36,7 @@ export class LikeService {
 			modifier = -1;
 			await this.notificationService.createNotification({
 				notificationType: NotificationType.LIKE,
-				notificationGroup: this.getNotificationGroup(input.likeGroup),
+				notificationGroup: NotificationGroup.MEMBER,
 				notificationTitle: `Remove Like`,
 				notificationDesc: `${member.memberNick} removed like`,
 				authorId: input.memberId,
@@ -49,7 +49,7 @@ export class LikeService {
 					notificationType: NotificationType.LIKE,
 					notificationGroup: this.getNotificationGroup(input.likeGroup),
 					notificationTitle: 'New Like',
-					notificationDesc: `${member.memberNick} like ${input.likeGroup}`,
+					notificationDesc: `${member.memberNick} like you`,
 					authorId: input.memberId,
 					receiverId: input.likeRefId,
 				});
