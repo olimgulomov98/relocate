@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, forwardRef } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Like, MeLiked } from '../../libs/dto/like/like';
 import { Model, ObjectId } from 'mongoose';
@@ -9,8 +9,6 @@ import { OrdinaryInquiry } from '../../libs/dto/property/property.input';
 import { Properties } from '../../libs/dto/property/property';
 import { LikeGroup } from '../../libs/enums/like.enum';
 import { lookupFavorite } from '../../libs/config';
-import { NotificationGroup, NotificationType } from '../../libs/enums/notification.enum';
-import { MemberService } from '../member/member.service';
 import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
@@ -18,10 +16,10 @@ export class LikeService {
 	constructor(
 		@InjectModel('Like') private readonly likeModel: Model<Like>,
 		private notificationService: NotificationService,
-		@Inject(forwardRef(() => MemberService)) private memberService: MemberService,
 	) {}
 
 	public async toggleLike(input: LikeInput): Promise<number> {
+		const { likeGroup, likeRefId, memberId } = input;
 		const search: T = {
 				memberId: input.memberId,
 				likeRefId: input.likeRefId,
@@ -30,29 +28,14 @@ export class LikeService {
 
 		let modifier = 1;
 
-		const member = await this.memberService.getMember(null, input.memberId);
 		if (exist) {
 			await this.likeModel.findOneAndDelete(search).exec();
 			modifier = -1;
-			await this.notificationService.createNotification({
-				notificationType: NotificationType.LIKE,
-				notificationGroup: NotificationGroup.MEMBER,
-				notificationTitle: `Remove Like`,
-				notificationDesc: `${member.memberNick} removed like`,
-				authorId: input.memberId,
-				receiverId: input.likeRefId,
-			});
+			await this.notificationService.createNotificationForUnlike(likeGroup, likeRefId, memberId);
 		} else {
 			try {
 				await this.likeModel.create(input);
-				await this.notificationService.createNotification({
-					notificationType: NotificationType.LIKE,
-					notificationGroup: this.getNotificationGroup(input.likeGroup),
-					notificationTitle: 'New Like',
-					notificationDesc: `${member.memberNick} like you`,
-					authorId: input.memberId,
-					receiverId: input.likeRefId,
-				});
+				await this.notificationService.createNotificationForLike(likeGroup, likeRefId, memberId);
 			} catch (err) {
 				console.log('Error, Service.model', err.message);
 				throw new BadRequestException(Message.CREATE_FAILED);
@@ -60,19 +43,6 @@ export class LikeService {
 		}
 
 		return modifier;
-	}
-
-	private getNotificationGroup(likeGroup: LikeGroup): NotificationGroup {
-		switch (likeGroup) {
-			case LikeGroup.MEMBER:
-				return NotificationGroup.MEMBER;
-			case LikeGroup.ARTICLE:
-				return NotificationGroup.ARTICLE;
-			case LikeGroup.PROPERTY:
-				return NotificationGroup.PROPERTY;
-			default:
-				throw new BadRequestException('Invalid like group');
-		}
 	}
 
 	public async checkLikeExistence(input: LikeInput): Promise<MeLiked[]> {

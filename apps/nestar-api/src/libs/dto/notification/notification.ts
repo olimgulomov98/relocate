@@ -40,12 +40,12 @@ export class Notification {
 
 	/** from aggregation **/
 
-	@Field(() => Member, { nullable: true })
-	memberData?: Member;
+	// @Field(() => Member, { nullable: true })
+	// memberData?: Member;
 }
 
-@ObjectType()
-export class Notifications {
-	@Field(() => [Notification])
-	list: Notification[];
-}
+// @ObjectType()
+// export class Notifications {
+// 	@Field(() => [Notification])
+// 	list: Notification[];
+// }

@@ -1,8 +1,8 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 
 @ObjectType()
-export class Messages {
+export class Contacts {
 	@Field(() => String)
 	_id: ObjectId;
 
@@ -19,7 +19,7 @@ export class Messages {
 	message: string;
 
 	@Field(() => String)
-	messageRefId: ObjectId;
+	contactRefId: ObjectId;
 
 	@Field(() => String)
 	memberId: ObjectId;

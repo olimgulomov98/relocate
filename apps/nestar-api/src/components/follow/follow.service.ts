@@ -12,12 +12,14 @@ import {
 	lookupFollowerData,
 	lookupFollowingData,
 } from '../../libs/config';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class FollowService {
 	constructor(
 		@InjectModel('Follow') private readonly followModel: Model<Follower | Following>,
 		private readonly memberService: MemberService,
+		private readonly notificationService: NotificationService,
 	) {}
 
 	public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
@@ -29,7 +31,7 @@ export class FollowService {
 		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		const result = await this.registerSubcription(followerId, followingId);
-
+		await this.notificationService.createNotificationForFollow(followerId, followingId);
 		await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: 1 });
 		await this.memberService.memberStatsEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: 1 });
 
@@ -59,7 +61,7 @@ export class FollowService {
 			})
 			.exec();
 		if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-
+		await this.notificationService.createNotificationForUnfollow(followerId, followingId);
 		await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: -1 });
 		await this.memberService.memberStatsEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: -1 });
 

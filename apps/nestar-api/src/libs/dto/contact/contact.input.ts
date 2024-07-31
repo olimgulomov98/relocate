@@ -1,9 +1,9 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional, Length } from 'class-validator';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsNotEmpty } from 'class-validator';
 import { ObjectId } from 'mongoose';
 
 @InputType()
-export class MessageInput {
+export class ContactInput {
 	@IsNotEmpty()
 	@Field(() => String)
 	name: string;
@@ -17,13 +17,12 @@ export class MessageInput {
 	email: string;
 
 	@IsNotEmpty()
-	@Length(1, 100)
 	@Field(() => String)
 	message: string;
 
 	@IsNotEmpty()
 	@Field(() => String)
-	messageRefId: ObjectId;
+	contactRefId: ObjectId;
 
 	memberId?: ObjectId;
 }

@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
-const MessageSchema = new Schema(
+const ContactSchema = new Schema(
 	{
 		name: {
 			type: String,
@@ -22,7 +22,7 @@ const MessageSchema = new Schema(
 			required: true,
 		},
 
-		messageRefId: {
+		contactRefId: {
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
@@ -32,7 +32,7 @@ const MessageSchema = new Schema(
 			required: true,
 		},
 	},
-	{ timestamps: true, collection: 'messages' },
+	{ timestamps: true, collection: 'contacts' },
 );
 
-export default MessageSchema;
+export default ContactSchema;

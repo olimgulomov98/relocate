@@ -58,45 +58,14 @@ export class CommentService {
 				});
 				break;
 		}
-
-		const member = await this.memberService.getMember(null, memberId);
-		const property = await this.propertyService.getProperty(null, input.commentRefId);
-		// const article = await this.boardArticleService.getBoardArticle(null, input.commentRefId);
-
-		switch (input.commentGroup) {
-			case CommentGroup.PROPERTY:
-				await this.notificationService.createNotification({
-					notificationType: NotificationType.COMMENT,
-					notificationGroup: NotificationGroup.PROPERTY,
-					notificationTitle: `New Comment`,
-					notificationDesc: `${member.memberNick} commented "${input.commentContent}" on your property ${property.propertyTitle}!`,
-					authorId: input.memberId,
-					receiverId: property.memberData?._id,
-				});
-				break;
-			case CommentGroup.ARTICLE:
-				await this.notificationService.createNotification({
-					notificationType: NotificationType.COMMENT,
-					notificationGroup: NotificationGroup.ARTICLE,
-					notificationTitle: `New Comment`,
-					notificationDesc: `${member.memberNick} commented "${input.commentContent}" on your article!`,
-					authorId: input.memberId,
-					receiverId: input.commentRefId,
-				});
-				break;
-			case CommentGroup.MEMBER:
-				await this.notificationService.createNotification({
-					notificationType: NotificationType.COMMENT,
-					notificationGroup: NotificationGroup.MEMBER,
-					notificationTitle: `New Comment`,
-					notificationDesc: `${member.memberNick} commented "${input.commentContent}" on your profile!}`,
-					authorId: input.memberId,
-					receiverId: input.commentRefId,
-				});
-				break;
-		}
-
 		if (!result) throw new InternalServerErrorException(Message.CREATE_FAILED);
+
+		await this.notificationService.createNotificationForComment(
+			input.commentGroup,
+			input.commentRefId,
+			memberId,
+			input.commentContent,
+		);
 
 		return result;
 	}
