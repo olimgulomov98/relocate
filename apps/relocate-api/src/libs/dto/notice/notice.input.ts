@@ -16,7 +16,7 @@ export class NoticeInput {
 	@Field(() => String)
 	noticeTitle: string;
 
-	@IsOptional()
+	@IsNotEmpty()
 	@Field(() => String)
-	noticeContent?: string;
+	noticeContent: string;
 }
