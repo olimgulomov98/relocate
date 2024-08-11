@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+  relocate-api:
+    container_name: relocate-api
+    restart: always
+    image: node:20.10.0
+    ports:
+      - 4001:3004
+    volumes:
+      - ./:/usr/src/relocate
+    working_dir: /usr/src/relocate
+
+    networks:
+      - monorepo-network
+
+    # FOR PORDUCTION
+    command: bash -c "npm install && npm run build && npm run start:prod"
+
+  relocate-batch:
+    container_name: relocate-batch
+    restart: unless-stopped
+    image: node:20.10.0
+    ports:
+      - 4002:3005
+    volumes:
+      - ./:/usr/src/relocate
+    working_dir: /usr/src/relocate
+
+    networks:
+      - monorepo-network
+
+    # FOR PORDUCTION
+    command: bash -c "npm install && npm run build && npm run start:prod:batch"
+
+networks:
+  monorepo-network:
+    driver: bridge

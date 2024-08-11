@@ -19,7 +19,7 @@
 				"tsConfigPath": "apps/relocate-api/tsconfig.app.json"
 			}
 		},
-		"nestar-batch": {
+		"relocate-batch": {
 			"type": "application",
 			"root": "apps/relocate-batch",
 			"entryFile": "main",
