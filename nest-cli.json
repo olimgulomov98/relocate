@@ -10,7 +10,7 @@
 	"monorepo": true,
 	"root": "apps/relocate-api",
 	"projects": {
-		"nestar-api": {
+		"relocate-api": {
 			"type": "application",
 			"root": "apps/relocate-api",
 			"entryFile": "main",
