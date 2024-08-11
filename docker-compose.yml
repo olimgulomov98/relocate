@@ -1,5 +1,3 @@
-version: '3.3'
-
 services:
   relocate-api:
     container_name: relocate-api
