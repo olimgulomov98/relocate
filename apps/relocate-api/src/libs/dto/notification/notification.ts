@@ -1,6 +1,5 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { Member, TotalCounter } from '../member/member';
 import { NotificationGroup, NotificationStatus, NotificationType } from '../../enums/notification.enum';
 
 @ObjectType()
@@ -37,15 +36,4 @@ export class Notification {
 
 	@Field(() => Date)
 	createdAt: Date;
-
-	/** from aggregation **/
-
-	// @Field(() => Member, { nullable: true })
-	// memberData?: Member;
 }
-
-// @ObjectType()
-// export class Notifications {
-// 	@Field(() => [Notification])
-// 	list: Notification[];
-// }
